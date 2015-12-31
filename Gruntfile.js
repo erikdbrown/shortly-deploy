@@ -3,9 +3,6 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
-      options: {
-        separator: ';'
-      },
       dist: {
         src: [
         // 'app/**/*.js',
@@ -14,7 +11,7 @@ module.exports = function(grunt) {
         // 'test/*.js',
         // '*.js'
         ], 
-        dest: 'dist/built.js'
+        dest: 'public/dist/<%= pkg.name %>.js'
       }
     },
 
@@ -23,7 +20,7 @@ module.exports = function(grunt) {
         options: {
           reporter: 'spec'
         },
-        src: ['test/**/*.js']
+        src: ['test/**/*.js'] 
       }
     },
 
@@ -34,6 +31,11 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      dist: {
+        files: {
+          'public/dist/<%= pkg.name %>.min.js' : ['<%= concat.dist.dest %>']
+        }
+      }
     },
 
     jshint: {
@@ -121,7 +123,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('deploy', [ 'mochaTest']);
+  grunt.registerTask('deploy', [ 'jshint', 'concat', 'uglify', 'mochaTest']);
   //, 'uglify', 'jshint', 'mochaTest'
 
 
